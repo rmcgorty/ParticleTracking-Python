@@ -50,6 +50,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     res = res+1
     res = np.hstack([0,res,len(t)]) # ks I don't understand the len(t)
     ngood = res[1]-res[0]
+    print "ngood:", ngood
     # ngood here is number of features, starting from the beginning of the input
     # features file, which have the same time step
     eyes = np.arange(0,ngood)
@@ -99,7 +100,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
             maxx = np.max(xyzs[w,d])
             volume = volume*(maxx-minn)
         
-        blocksize = np.max(maxdisp,(volume/(20*ngood))**(1.0/dim)) # Tailor the factor in bottom for the particular system 
+        blocksize = np.maximum(maxdisp,(volume/(20*ngood))**(1.0/dim)) # Tailor the factor in bottom for the particular system 
     # Start the main loop over the frames.
     for i in xrange(istart+1,z+1): # always starts at 2 (while inipos is not implemented)
         ispan = (i-1) % zspan
@@ -119,14 +120,17 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 # (which consists of the d-dimensional raster scan of the volume.)
                 abi = np.floor(xyi/blocksize)
                 abpos = np.floor(pos/blocksize)
+                print "abi size:", abi.shape
+                print "abpos size:", abpos.shape
                 si = np.ones((1,m))[0]
                 spos = np.zeros((1,n))[0]
                 dimm = np.zeros((1,dim))[0]
                 coff = 1
                 
                 for j in xrange(0,dim):
-                    minn = np.min(np.vstack([abi[:,j],abpos[:,j]]))
-                    maxx = np.max(np.vstack([abi[:,j],abpos[:,j]]))
+                    #RJM 2019-01-19, change from vstack to hstack
+                    minn = np.min(np.hstack([abi[:,j],abpos[:,j]]))
+                    maxx = np.max(np.hstack([abi[:,j],abpos[:,j]]))
                     abi[:,j] = abi[:,j] - minn
                     abpos[:,j] = abpos[:,j] - minn
                     dimm[j] = maxx - minn + 1
@@ -163,15 +167,15 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 
                 # make a hash table which will allow us to know which new particles
                 # are at a given si.
-                strt = np.zeros(nblocks)-1
-                fnsh = np.zeros(nblocks)
+                strt = np.zeros(np.int(nblocks))-1
+                fnsh = np.zeros(np.int(nblocks))
                 
                 for j in xrange(1,m+1):
-                    if strt[si[isort[j-1]]] == -1: # ks how could it be anything else?
-                        strt[si[isort[j-1]]] = j
-                        fnsh[si[isort[j-1]]] = j
+                    if strt[np.int(si[isort[j-1]])] == -1: # ks how could it be anything else?
+                        strt[np.int(si[isort[j-1]])] = j
+                        fnsh[np.int(si[isort[j-1]])] = j
                     else:
-                        fnsh[si[isort[j-1]]] = j
+                        fnsh[np.int(si[isort[j-1]])] = j
                 # loops over the old particles, and find those new particles in the 'cube'.
                 coltot = np.zeros(m)
                 rowtot = np.zeros(n)
@@ -185,7 +189,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                     if ngood !=0:
                         s = s[w]
                         for k in xrange(0,ngood):
-                            map1 = np.hstack([map1,isort[(strt[s[k]]-1):(fnsh[s[k]])]])
+                            map1 = np.hstack([map1,isort[np.int(strt[s[k]]-1):np.int(fnsh[s[k]])]])
                         map1 = map1[1:len(map1)]
                         
                         # find those trivial bonds
@@ -204,13 +208,13 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 w = (rowtot==1).nonzero()[0]
                 ngood = len(w)
                 if ngood != 0: # ks not tested
-                    ww = (coltot[which1[w]]==1).nonzero()[0]
+                    ww = (coltot[which1[w].astype(np.int)]==1).nonzero()[0]
                     ngood = len(w)
                     if ngood != 0:
-                        resx[ispan,w[ww]] = eyes[which1[w[ww]]]
-                        found[which1[w[ww]]] = 1
+                        resx[ispan,w[ww]] = eyes[which1[w[ww]].astype(np.int)]
+                        found[which1[w[ww]].astype(np.int)] = 1
                         rowtot[w[ww]] = 0
-                        coltot[which1[w[ww]]] = 0
+                        coltot[which1[w[ww]].astype(np.int)] = 0
                 
                 labely = (rowtot>0).nonzero()[0]
                 ngood=len(labely)
