@@ -50,7 +50,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     res = res+1
     res = np.hstack([0,res,len(t)]) # ks I don't understand the len(t)
     ngood = res[1]-res[0]
-    print "ngood:", ngood
+    #print "ngood:", ngood
     # ngood here is number of features, starting from the beginning of the input
     # features file, which have the same time step
     eyes = np.arange(0,ngood)
