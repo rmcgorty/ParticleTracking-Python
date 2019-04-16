@@ -126,7 +126,7 @@ def run(basepath, fname, numframes, featuresize, masscut=0, Imin=0, barI=None,
         return None
 
 
-def run_v2(img_timeseries, featuresize, masscut=0, Imin=0, barI=None, barCc=None, barRg=None, IdivRg=None, field=2):  
+def run_v2(img_timeseries, featuresize, masscut=0, Imin=0, barI=None, barCc=None, barRg=None, IdivRg=None, field=2, verbose=True, bandpass='raw'):  
     numframes = img_timeseries.shape[0]
     times_file = "fov" + "_times.npy" #added RJM 4/5/16
     if os.path.isfile(times_file):
@@ -138,7 +138,7 @@ def run_v2(img_timeseries, featuresize, masscut=0, Imin=0, barI=None, barCc=None
         img=img_timeseries[x,:,:]
        
         lnoise=1
-        M = feature2D.feature2D(img,lnoise,featuresize,masscut,Imin,field);
+        M = feature2D.feature2D(img,lnoise,featuresize,masscut,Imin,field,verbose=verbose,bandpass=bandpass);
         
         if len(M) != 0:
             if (x % 50) == 0: # prints the frame number every 50 timepoints
