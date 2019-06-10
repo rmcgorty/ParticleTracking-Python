@@ -4,6 +4,7 @@ from PIL import Image
 import tiff_file
 import os
 import numpy as np 
+import numbers
 import matplotlib.pyplot as plt
 
 #Had fovn as 3rd argument but got rid of that 4/5/16 RJM
@@ -83,42 +84,44 @@ def run(basepath, fname, numframes, featuresize, masscut=0, Imin=0, barI=None,
         lnoise=1
         M = feature2D.feature2D(img,lnoise,featuresize,masscut,Imin,field,verbose=verbose,bandpass=bandpass);
         
-        if len(M) != 0:
-            if (x % 50) == 0: # prints the frame number every 50 timepoints
-                print ('Frame ' + str(x))
-            
-            # The rejection process
-            if barCc != None:
-                X = (M[:,4] > barCc)
-                M[X,:] = 0
-            if barRg != None:
-                X = (M[:,3] > barRg)
-                M[X,:] = 0
-            if barI != None:
-                X = (M[:,2] < barI)
-                M[X,:] = 0
-            if IdivRg != None:
-                X = (M[:,2]/M[:,3] < IdivRg)
-                M[X,:] = 0
-            
-            M = M[(M[:,0] != 0).nonzero()[0],:]
-            
-            a = len(M[:,0])
-            
-            xv = np.array([x]*a)
-            #timev = np.array([times[x-1]]*a) #commented out 4/5/16 cause x now starts at 0
-            timev = np.array([times[x]]*a)
-            
-            M = np.hstack([M,(xv).reshape(len(xv),1),(timev).reshape(len(timev),1)])
-            if x==0:
-                MT = tuple(M)
-                MT = np.array(M)
-            else:
-                MT = np.vstack([MT,M])
+        if not isinstance(M, numbers.Integral):
+        
+            if len(M) != 0:
+                if (x % 50) == 0: # prints the frame number every 50 timepoints
+                    print ('Frame ' + str(x))
                 
-            if verbose:
-                print(str(a) + ' features kept.') 
-            del img, M
+                # The rejection process
+                if barCc != None:
+                    X = (M[:,4] > barCc)
+                    M[X,:] = 0
+                if barRg != None:
+                    X = (M[:,3] > barRg)
+                    M[X,:] = 0
+                if barI != None:
+                    X = (M[:,2] < barI)
+                    M[X,:] = 0
+                if IdivRg != None:
+                    X = (M[:,2]/M[:,3] < IdivRg)
+                    M[X,:] = 0
+                
+                M = M[(M[:,0] != 0).nonzero()[0],:]
+                
+                a = len(M[:,0])
+                
+                xv = np.array([x]*a)
+                #timev = np.array([times[x-1]]*a) #commented out 4/5/16 cause x now starts at 0
+                timev = np.array([times[x]]*a)
+                
+                M = np.hstack([M,(xv).reshape(len(xv),1),(timev).reshape(len(timev),1)])
+                if x==0:
+                    MT = tuple(M)
+                    MT = np.array(M)
+                else:
+                    MT = np.vstack([MT,M])
+                    
+                if verbose:
+                    print(str(a) + ' features kept.') 
+                del img, M
     try:
         np.save(os.path.join(pathout,'MT_featsize_' +str(featuresize)),MT)
         return MT
