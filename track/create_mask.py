@@ -10,7 +10,7 @@ def rsqd(w,h):
     x = x**2
     y = np.arange(-yc,yc+1)
     y = y**2
-    for j in xrange(0,h):
+    for j in range(0,h):
         s[:,j] = x.T+y[j]     
     return s
     
@@ -21,6 +21,6 @@ def thetarr(w):
     yc = (w-1)/2
     x = np.arange(-xc,xc+1)
     y = np.arange(-yc,yc+1)
-    for j in xrange(0,w):
+    for j in range(0,w):
         theta[:,j] = np.arctan2(x,y[j])
     return theta

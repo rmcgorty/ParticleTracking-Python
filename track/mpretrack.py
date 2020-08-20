@@ -78,7 +78,7 @@ def run(basepath, fname, numframes, featuresize, masscut=0, Imin=0, barI=None,
         times = np.arange(0,numframes) #added this if statement RJM 4/5/16
     strnam = os.path.join(basepath, fname)
     img_timeseries = tiff_file.imread(strnam)
-    for x in xrange(0,numframes): #was xrange(1,numframes) -- changed 1 to 0 on 4/5/16 RJM
+    for x in range(0,numframes): #was xrange(1,numframes) -- changed 1 to 0 on 4/5/16 RJM
         img=img_timeseries[x,:,:]
        
         lnoise=1
@@ -137,7 +137,7 @@ def run_v2(img_timeseries, featuresize, masscut=0, Imin=0, barI=None, barCc=None
     else:
         times = np.arange(0,numframes) #added this if statement RJM 4/5/16
 
-    for x in xrange(0,numframes): #was xrange(1,numframes) -- changed 1 to 0 on 4/5/16 RJM
+    for x in range(0,numframes): #was xrange(1,numframes) -- changed 1 to 0 on 4/5/16 RJM
         img=img_timeseries[x,:,:]
        
         lnoise=1
@@ -220,14 +220,14 @@ def test(basepath, fname, frame, featuresize, masscut=0, Imin=0, barI=None,
     M = feature2D.feature2D(img,lnoise,featuresize,masscut,Imin,field,bandpass=bandpass);
     
     if verbose and (not np.isscalar(M)):
-        print "Intensity of 1st particle: %.2f" % M[0,2]
-        print "Rg of 1st particle: %.2f" % M[0,3]
-        print "Eccentricity of 1st particle: %.4f" % M[0,4]
+        print("Intensity of 1st particle: %.2f" % M[0,2])
+        print("Rg of 1st particle: %.2f" % M[0,3])
+        print("Eccentricity of 1st particle: %.4f" % M[0,4])
     
-    print M
+    print(M)
     
     if np.isscalar(M): #len(M)==0:
-        print "None found..."
+        print("None found...")
         print('--------------------------')
         return None, None
     

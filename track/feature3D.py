@@ -166,7 +166,7 @@ def feature3D(image, diameter, masksz, xyzmax, inputv, sep, masscut,threshold,lm
     xlow = int(extent[0]//2)
     ylow = int(extent[1]//2)
     zlow = int(extent[2]//2)
-    for i in xrange(0,nz):
+    for i in range(0,nz):
         a[xlow:xlow+nx,ylow:ylow+ny,zlow+i] = image[:,:,i]
     nx = int(nx + extent[0])
     ny = int(ny + extent[1])
@@ -218,7 +218,7 @@ def feature3D(image, diameter, masksz, xyzmax, inputv, sep, masscut,threshold,lm
     thresh = np.zeros(nmax)
     nthresh = np.zeros(nmax)
     tops = np.zeros(nmax)
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         tops[i] = a[x[i],y[i],z[i]]
     ww = (tops > lmaxthresh).nonzero()[0] # only those features with a total mass higher than masscut are considered to be a real feature
     nmax = len(ww)
@@ -226,12 +226,12 @@ def feature3D(image, diameter, masksz, xyzmax, inputv, sep, masscut,threshold,lm
     if inputv[2]==1:
         thresh = tops*threshold
     if inputv[2]==1:
-        for i in xrange(0,nmax):
+        for i in range(0,nmax):
             bb = a[xl[i]:xh[i],yl[i]:yh[i],zl[i]:zh[i]]
             nthresh[i] = np.sum(bb*mask>thresh[i])/np.sum(bb*mask>0)
     
     # Estimate the mass
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         temp=a[xl[i]:xh[i],yl[i]:yh[i],zl[i]:zh[i]]-thresh[i]
         m[i] = np.sum((temp>0)*temp*mask) # mass of each feature
         del temp
@@ -263,7 +263,7 @@ def feature3D(image, diameter, masksz, xyzmax, inputv, sep, masscut,threshold,lm
     rg = np.zeros(nmax)
     
     # Calculate the radius of gyration^2 and the peak centroids
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         temp=a[xl[i]:xh[i],yl[i]:yh[i],zl[i]:zh[i]]-thresh[i]
         rg[i] = np.sum((temp>0)*temp*rmask)/m[i]
         xc[i] = np.sum((temp>0)*temp*xmask)
@@ -287,8 +287,8 @@ def feature3D(image, diameter, masksz, xyzmax, inputv, sep, masscut,threshold,lm
     
     suba = np.zeros((int(xh[0]-xl[0]),int(yh[0]-yl[0]),int(zh[0]-zl[0]),nmax))
     # do 20 iterations of fracshift. Can be more or less
-    for j in xrange(0,20):
-        for i in xrange(0,nmax):
+    for j in range(0,20):
+        for i in range(0,nmax):
             suba[:,:,:,i] = fracshift3D.fracshift3D(np.double(a[xl[i]:xh[i],yl[i]:yh[i],zl[i]:zh[i]]), -xcn[i], -ycn[i], -zcn[i])
             m[i] = np.sum(suba[:,:,:,i]*mask)
             xc[i] = np.sum(suba[:,:,:,i]*xmask)
@@ -303,7 +303,7 @@ def feature3D(image, diameter, masksz, xyzmax, inputv, sep, masscut,threshold,lm
         x = x + xc
         y = y + yc
         z = z + zc  
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         rg[i] = np.sum(suba[:,:,:,i]*rmask)/m[i]
         
     x = x - extt[0]//2

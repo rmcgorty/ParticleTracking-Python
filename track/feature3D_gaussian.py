@@ -3,11 +3,11 @@ import numpy as np
 import sys
 import llmx3D, lrsqd3D, make_arr, fracshift3D,gaussian3D,isinstack, nlparci
 import pdb
-reload(llmx3D)
-reload(lrsqd3D)
-reload(make_arr)
-reload(fracshift3D)
-reload(gaussian3D)
+#reload(llmx3D)
+#reload(lrsqd3D)
+#reload(make_arr)
+#reload(fracshift3D)
+#reload(gaussian3D)
 def feature3D_gaussian(image,diameter,masksz,xyzmax,inputv,sep,masscut=0,bckg=0,threshold=0):
     # this program is written by Yongxiang Gao and Maria Kilfoil based on IDL
     # code written by John C. Crocker and David G. Grier.
@@ -165,7 +165,7 @@ def feature3D_gaussian(image,diameter,masksz,xyzmax,inputv,sep,masscut=0,bckg=0,
     xlow = int(extent[0]//2)
     ylow = int(extent[1]//2)
     zlow = int(extent[2]//2)
-    for i in xrange(0,nz):
+    for i in range(0,nz):
         a[xlow:xlow+nx,ylow:ylow+ny,zlow+i] = image[:,:,i]
     nx = int(nx + extent[0])
     ny = int(ny + extent[1])
@@ -218,17 +218,17 @@ def feature3D_gaussian(image,diameter,masksz,xyzmax,inputv,sep,masscut=0,bckg=0,
     thresh = np.zeros(nmax)
     nthresh = np.zeros(nmax)
     tops = np.zeros(nmax)
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         tops[i] = a[x[i],y[i],z[i]]
     if inputv[2]==1:
         thresh = tops*threshold
     if inputv[2]==1:
-        for i in xrange(0,nmax):
+        for i in range(0,nmax):
             bb = a[xl[i]:xh[i],yl[i]:yh[i],zl[i]:zh[i]]
             nthresh[i] = np.sum(bb*mask>thresh[i])/np.sum(bb*mask>0)
     
     # Estimate the mass
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         temp=a[xl[i]:xh[i],yl[i]:yh[i],zl[i]:zh[i]]-thresh[i]
         m[i] = np.sum((temp>0)*temp*mask) # mass of each feature
         del temp
@@ -258,14 +258,14 @@ def feature3D_gaussian(image,diameter,masksz,xyzmax,inputv,sep,masscut=0,bckg=0,
     w = extent//2
     wshift = extt//2
     
-    for jj in xrange(0,len(x)):   # cycle through all the local maxima found
+    for jj in range(0,len(x)):   # cycle through all the local maxima found
         #if jj%49==0:
         #    print jj
         img_vec=np.zeros(extent[0]*extent[1]*extent[2])
         pos_vec=np.zeros(extent[0]*extent[1]*extent[2])
         # Linearize the xyz positions and the image for mynlnfit
-        for k in xrange(0,int(extent[2])):
-            for j in xrange(0,int(extent[1])):
+        for k in range(0,int(extent[2])):
+            for j in range(0,int(extent[1])):
                 img_vec[int(k*extent[1]*extent[0]+j*extent[0]):int(k*extent[1]*extent[0]+(j+1)*extent[0])] = np.double(a[int(x[jj]-w[0]):int(x[jj]+w[0]+1),int(y[jj]-w[1]+j),int(z[jj]-w[2]+k)])
                 pos_vec[int(k*extent[1]*extent[0]+j*extent[0]):int(k*extent[1]*extent[0]+(j+1)*extent[0])] = (z[jj]-w[2]+k)*2000**2 + (y[jj]-w[1]+j)*2000 + np.arange(x[jj]-w[0],(x[jj]+w[0]+1))
         
@@ -285,8 +285,8 @@ def feature3D_gaussian(image,diameter,masksz,xyzmax,inputv,sep,masscut=0,bckg=0,
             x[jj] = round(beta[0])
             y[jj] = round(beta[1])
             z[jj] = round(beta[2])
-            for k in xrange(0,int(extent[2])):
-                for j in xrange(0,int(extent[1])):
+            for k in range(0,int(extent[2])):
+                for j in range(0,int(extent[1])):
                     img_vec[int(k*extent[1]*extent[0]+j*extent[0]):int(k*extent[1]*extent[0]+(j+1)*extent[0])] = np.double(a[int(x[jj]-w[0]):int(x[jj]+w[0]+1),int(y[jj]-w[1]+j),int(z[jj]-w[2]+k)])
                     pos_vec[int(k*extent[1]*extent[0]+j*extent[0]):int(k*extent[1]*extent[0]+(j+1)*extent[0])] = (z[jj]-w[2]+k)*2000**2 + (y[jj]-w[1]+j)*2000 + np.arange(x[jj]-w[0],(x[jj]+w[0]+1))
             if bckg==0:
@@ -307,7 +307,7 @@ def feature3D_gaussian(image,diameter,masksz,xyzmax,inputv,sep,masscut=0,bckg=0,
                 r[jj,30] = beta2[7]
     rsq = lrsqd3D.lrsqd3D(extent,1,1)
     mask_fs = rsq < (3/2)**2 + 0.5
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         if int(r[i,6]-w[0]+1)>=1 and int(r[i,7]-w[1]+1)>=1 and int(r[i,8]-w[2]+1)>=1 and int(r[i,6]+w[0])<=xyzmax[0]-1 and int(r[i,7]+w[1])<=xyzmax[1]-1 and int(r[i,8]+w[2])<=xyzmax[2]-1:
             suba = fracshift3D.fracshift3D(np.double(image[int(r[i,6]-w[0]):int(r[i,6]+w[0]+1),int(r[i,7]-w[1]):int(r[i,7]+w[1]+1),int(r[i,8]-w[2]):int(r[i,8]+w[2]+1)]),int(r[i,6])-r[i,6],int(r[i,7])-r[i,7],int(r[i,8])-r[i,8])
             try:

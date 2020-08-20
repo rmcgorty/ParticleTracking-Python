@@ -74,12 +74,12 @@ def bpass3D(image, lnoise, lobject, inputv):
             padzw = np.round(np.max([lobject[2],2 * bb]))
     # pad out the array with average values of corresponding frames
         ave = np.zeros(nf,np.double)
-        for i in xrange(0,nf):
+        for i in range(0,nf):
             ave[i] = np.sum(image[:,:,i])/(nx*ny)
         g = np.zeros((nx+2*padxw, ny+(2*padyw), nf+(2*padzw)),np.double)
         g[:,:,0:padzw] = ave[0]
         g[:,:,nf-padzw:] = ave[nf-1]
-        for i in xrange(0,nf):
+        for i in range(0,nf):
             g[:,:,padzw+i] = ave[i]
         g[padxw:padxw+nx,padyw:padyw+ny,padzw:padzw+nf] = np.double(image)
         nx = nx + (2*padxw)
@@ -101,7 +101,7 @@ def bpass3D(image, lnoise, lobject, inputv):
     gz = np.reshape(gz,(len(gz),1))
     bz = np.reshape(bz,(len(bz),1))
     # do x and y convolutions
-    for i in xrange(int(padzw),int(nf-padzw)):
+    for i in range(int(padzw),int(nf-padzw)):
         g[:,:,i] = sps.convolve2d(g[:,:,i],gx,'same')
         g[:,:,i] = sps.convolve2d(g[:,:,i],gy,'same')
         b[:,:,i] = sps.convolve2d(b[:,:,i],bx,'same')
@@ -109,7 +109,7 @@ def bpass3D(image, lnoise, lobject, inputv):
     temp = g.transpose((2,0,1))
     
     d = np.zeros((temp.shape[0],temp.shape[1],int(ny-padyw)))
-    for i in xrange(int(padyw),int(ny-padyw)):
+    for i in range(int(padyw),int(ny-padyw)):
         d[:,:,i] = sps.convolve2d(temp[:,:,i],gz,'same')
     del temp
     g = d.transpose((1,2,0))
@@ -118,7 +118,7 @@ def bpass3D(image, lnoise, lobject, inputv):
     del b
     
     f = np.zeros((temp2.shape[0],temp2.shape[1],int(ny-padyw)))
-    for i in xrange(int(padyw),int(ny-padyw)):
+    for i in range(int(padyw),int(ny-padyw)):
         f[:,:,i] = sps.convolve2d(temp2[:,:,i],bz,'same')
     del temp2
     b = f.transpose((1,2,0))

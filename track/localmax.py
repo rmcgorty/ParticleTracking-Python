@@ -27,7 +27,7 @@ def localmax(image,sep,field,intmin):
         k=np.zeros((256,len(a[0,:])))
         amin=a.min()
         amax=a.max()
-        for ii in xrange(0,len(a[0,:])):
+        for ii in range(0,len(a[0,:])):
             tmp=np.histogram(a[:,ii],256,(amin,amax))[0]
             k[:,ii]=tmp
         h=k.sum(axis=1)
@@ -44,7 +44,7 @@ def localmax(image,sep,field,intmin):
     ny = sz[0]
     x=[0]*len(r[0])
     y=[0]*len(r[0])
-    for i in xrange(0,len(r[0])):
+    for i in range(0,len(r[0])):
         x[i]=r[1][i]
         y[i]=r[0][i]
     x0 = x - Range
@@ -78,11 +78,11 @@ def localmax(image,sep,field,intmin):
     # Find and clear spurious points arising from features which get 
     # found twice or which have flat peaks and thus produce multiple hits.
     c=np.zeros((ny,nx))
-    for i in xrange(0,ngood):
+    for i in range(0,ngood):
         #print i,r[0][i],r[1][i]
         c[int(r[0][i]),int(r[1][i])] = a[int(r[0][i]),int(r[1][i])]
     center = w * Range + Range # position in mask pixel number of the center of the mask
-    for i in xrange(0,ngood):
+    for i in range(0,ngood):
          b = c[int(y0[i]):int(y1[i]+1),int(x0[i]):int(x1[i]+1)]
          b = b*mask # look only in circular region
          Y = np.msort(b)

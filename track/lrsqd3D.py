@@ -26,7 +26,7 @@ def lrsqd3D(extent,yratio=1,zratio=1):
     
     xi = xi.reshape(len(xi),1)
     ya = ya.reshape(len(ya),1)
-    for k in xrange(0,int(z)):
+    for k in range(0,int(z)):
         r2[:,:,k] = (xi*xa) + (ya*yi) + za[k]
     
     return r2

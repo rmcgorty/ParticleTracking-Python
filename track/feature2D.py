@@ -86,7 +86,7 @@ def feature2D(img,Lambda,w,masscut=0,Imin=0,field=2,bandpass='raw',
         return r
     x=[0]*len(loc[0])
     y=[0]*len(loc[0])
-    for i in xrange(0,len(loc[0])):
+    for i in range(0,len(loc[0])):
         y[i]=int(loc[0][i])
         x[i]=int(loc[1][i])
     x=x-np.double(0) #convert to arrays
@@ -121,7 +121,7 @@ def feature2D(img,Lambda,w,masscut=0,Imin=0,field=2,bandpass='raw',
     ycen = cen
     
     # Estimate the mass
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         m[i] = (np.double(a[int(yl[i]):int(yh[i])+1,int(xl[i]):int(xh[i])+1])*mask).sum()
     
     # remove features based on 'masscut' parameter
@@ -149,7 +149,7 @@ def feature2D(img,Lambda,w,masscut=0,Imin=0,field=2,bandpass='raw',
     e = [0]*nmax-np.double(0)
     
     # Calculate feature centers
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         xc[i] = (np.double(a[int(yl[i]):int(yh[i])+1,int(np.fix(xl[i])):int(xh[i])+1])*xmask).sum()
         yc[i] = (np.double(a[int(yl[i]):int(yh[i])+1,int(xl[i]):int(xh[i])+1])*ymask).sum()
     x1=x
@@ -166,7 +166,7 @@ def feature2D(img,Lambda,w,masscut=0,Imin=0,field=2,bandpass='raw',
     y2=y
     
     # Construct the subarray and calculate the mass, squared radius of gyration, eccentricity
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         suba[:,:,i] = fracshift.fracshift(np.double(a[int(yl[i]):int(yh[i])+1,int(xl[i]):int(xh[i])+1]),-xc[i],-yc[i])
         m[i] = (suba[:,:,i]*mask).sum()
         rg[i] = ((suba[:,:,i]*mask3).sum())/m[i]
@@ -174,7 +174,7 @@ def feature2D(img,Lambda,w,masscut=0,Imin=0,field=2,bandpass='raw',
         tmp2 = (m[i]-suba[cen,ycen,i]+1e-6)
         e[i] = tmp/tmp2
     
-    for i in xrange(0,nmax):
+    for i in range(0,nmax):
         xc[i] = np.double(suba[:,:,i]*xmask).sum()
         yc[i] = np.double(suba[:,:,i]*ymask).sum()
         

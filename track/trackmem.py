@@ -4,7 +4,7 @@ import unq
 import numpy as np
 import pdb
 import luberize
-reload(unq)
+#reload(unq)
 
 def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     
@@ -30,7 +30,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     #check the input time vector is ok, i.e. sorted and uniform
     st_t=np.roll(t,1)
     st=[0]*(len(st_t)-1)-np.double(0) # intialize st and make it an array
-    for i in xrange(1,len(t)):
+    for i in range(1,len(t)):
         st[i-1] = t[i]-st_t[i]
     
     # all elements of st should be equal and positive, OR ZERO
@@ -86,23 +86,23 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     if notnsqrd:
         cube = np.zeros((3**dim,dim))
         # construct the vertices of a 3x3x3... d-dimensional hypercube
-        for d in xrange(1,dim+1):
+        for d in range(1,dim+1):
             numb = 0
-            for j in xrange(1,int(3**dim)+1,int(3**(d-1))):
-                for jj in xrange(j-1,j+3**(d-1)-1):
+            for j in range(1,int(3**dim)+1,int(3**(d-1))):
+                for jj in range(j-1,j+3**(d-1)-1):
                     cube[jj,(d-1)] = numb
                 numb = (numb+1)%3
         # calculate a blocksize which may be greater than maxdisp, but which
         # keeps nblocks reasonably small.
         volume = 1 # volume in dimensional space. e.g. dim=2, "volume" is the area
-        for d in xrange(0,dim):
+        for d in range(0,dim):
             minn = np.min(xyzs[w,d])
             maxx = np.max(xyzs[w,d])
             volume = volume*(maxx-minn)
         
         blocksize = np.maximum(maxdisp,(volume/(20*ngood))**(1.0/dim)) # Tailor the factor in bottom for the particular system 
     # Start the main loop over the frames.
-    for i in xrange(istart+1,z+1): # always starts at 2 (while inipos is not implemented)
+    for i in range(istart+1,z+1): # always starts at 2 (while inipos is not implemented)
         ispan = (i-1) % zspan
         # Get the new particle positions
         m = res[i] - res[i-1] # number of new particles
@@ -120,14 +120,14 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 # (which consists of the d-dimensional raster scan of the volume.)
                 abi = np.floor(xyi/blocksize)
                 abpos = np.floor(pos/blocksize)
-                print "abi size:", abi.shape
-                print "abpos size:", abpos.shape
+                print("abi size:", abi.shape)
+                print("abpos size:", abpos.shape)
                 si = np.ones((1,m))[0]
                 spos = np.zeros((1,n))[0]
                 dimm = np.zeros((1,dim))[0]
                 coff = 1
                 
-                for j in xrange(0,dim):
+                for j in range(0,dim):
                     #RJM 2019-01-19, change from vstack to hstack
                     minn = np.min(np.hstack([abi[:,j],abpos[:,j]]))
                     maxx = np.max(np.hstack([abi[:,j],abpos[:,j]]))
@@ -145,19 +145,19 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 cub = cube
                 deg = (dimm<3).nonzero()[0]
                 if deg:
-                    for j in xrange(0,len(deg)):
+                    for j in range(0,len(deg)):
                         cub = cub[(cub[:,deg[j]]<dimm[deg[j]]).nonzero(),:]
                 
                 # calculate the "s" coordinates of hypercube (with a corner at the origin)
                 scube = np.zeros((len(cub[:,0])))
                 coff = 1
-                for j in xrange(0,dim):
+                for j in range(0,dim):
                     scube = scube + cub[:,j]*coff
                     coff = coff*dimm[j]
                 
                 # shift the hypercube "s" coordinates to be centered around the origin
                 coff = 1
-                for j in xrange(0,dim):
+                for j in range(0,dim):
                     if dimm[j] > 3:
                         scube = scube - coff
                 scube = (scube+nblocks) % nblocks
@@ -170,7 +170,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 strt = np.zeros(np.int(nblocks))-1
                 fnsh = np.zeros(np.int(nblocks))
                 
-                for j in xrange(1,m+1):
+                for j in range(1,m+1):
                     if strt[np.int(si[isort[j-1]])] == -1: # ks how could it be anything else?
                         strt[np.int(si[isort[j-1]])] = j
                         fnsh[np.int(si[isort[j-1]])] = j
@@ -180,7 +180,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 coltot = np.zeros(m)
                 rowtot = np.zeros(n)
                 which1 = np.zeros(n)
-                for j in xrange(0,n):
+                for j in range(0,n):
                     map1 = -2
                     s = ((scube + spos[j]) % nblocks)
                     s=s.astype(int)
@@ -188,13 +188,13 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                     ngood = len(w)
                     if ngood !=0:
                         s = s[w]
-                        for k in xrange(0,ngood):
+                        for k in range(0,ngood):
                             map1 = np.hstack([map1,isort[np.int(strt[s[k]]-1):np.int(fnsh[s[k]])]])
                         map1 = map1[1:len(map1)]
                         
                         # find those trivial bonds
                         distq = np.zeros(len(map1))
-                        for d in xrange(0,dim):
+                        for d in range(0,dim):
                             distq = distq + (xyi[map1,d] - pos[j,d])**2
                         ltmax = distq < maxdisq
                         rowtot[j] = ltmax.sum()
@@ -233,15 +233,15 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 if ntrack==0:
                     print('WARNING - No valid particles to track!')
                 xmat = np.ones((ntrack,m))
-                for ng in xrange(0,m):
+                for ng in range(0,m):
                     xmat[:,ng] = ng
                 xmat=xmat.astype(int)
                 ymat = np.ones((m,ntrack))
-                for ng in xrange(0,ntrack):
+                for ng in range(0,ntrack):
                     ymat[:,ng] = ng
                 ymat = (ymat.astype(int)).T
                 
-                for d in xrange(0,dim):
+                for d in range(0,dim):
                     x = xyi[:,d]
                     y = pos[wh,d]
                     if d==0:
@@ -258,7 +258,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 else:
                     coltot = ltmax[0]
                 which1 = np.zeros(n)
-                for j in xrange(0,ntrack):
+                for j in range(0,ntrack):
                     mx = np.max(ltmax[j,:]) # max is faster than where
                     w = (ltmax[j,:]==mx).nonzero()[0]
                     if len(w)>1:
@@ -292,9 +292,9 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 # make a list of the non-trivial bonds
                 bonds = np.ones(2)
                 bondlen = 0
-                for j in xrange(0,ydim):
+                for j in range(0,ydim):
                     distq = np.zeros(xdim)
-                    for d in xrange(0,dim):
+                    for d in range(0,dim):
                         distq = distq + (xyi[labelx,d] - pos[labely[j],d])**2
                     w = (distq < maxdisq).nonzero()[0]
                     ngood = len(w)
@@ -370,7 +370,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                     bmap = bonds[:,0]
                 
                 # PREMUTATION CODE BEGINS
-                for nc in xrange(0,nclust):
+                for nc in range(0,nclust):
                     w = (bmap == -(nc+1)).nonzero()[0]
                     nbonds = len(w)
                     bonds = mbonds[w,:]
@@ -384,7 +384,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                     # check that runtime is not excessive
                     if nnew > 5:
                         rnsteps = 1
-                        for ii in xrange(0,nnew):
+                        for ii in range(0,nnew):
                             rnsteps = rnsteps * len((bonds[:,1]==unew[ii]).nonzero()[0])
                             if rnsteps > 5e4:
                                 print('WARNING: Difficult combinatorics encountered')
@@ -400,7 +400,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                     else:
                         nlost = 0
                     
-                    for ii in xrange(0,nold):
+                    for ii in range(0,nold):
                         h[(bonds[:,0] == uold[ii]).nonzero()[0]] = ii
                     st[0] = 0
                     fi[nnew-1]=nbonds
@@ -590,7 +590,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
             npull = len(wpull)
             if npull > 0:
                 lillist = np.hstack([1,1])
-                for ipull in xrange(0,npull):
+                for ipull in range(0,npull):
                     wpull2 = (bigresx[:,wpull[ipull]] != -1).nonzero()[0]
                     npull2 = len(wpull2)
                     lillist = np.vstack([lillist,np.hstack([(bigresx[wpull2,wpull[ipull]]).reshape(npull2,1),np.zeros((npull2,1))+uniqid[wpull[ipull]]])])
@@ -627,7 +627,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     npull = len(wpull)
     if npull > 0:
         lillist = np.hstack([1,1])
-        for ipull in xrange(0,npull):
+        for ipull in range(0,npull):
             wpull2 = (bigresx[:,wpull[ipull]] != -1).nonzero()[0]
             npull2 = len(wpull2)
             lillist = np.vstack([lillist,np.hstack([(bigresx[wpull2,wpull[ipull]]).reshape(npull2,1),np.zeros((npull2,1))+uniqid[wpull[ipull]]])])
@@ -650,7 +650,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     
     olist = olist.astype(int)
     if olist != []:
-        for j in xrange(0,dd+1):
+        for j in range(0,dd+1):
             res[:,j] = xyzs[olist[:,0],j]
             res[:,dd+1] = olist[:,1] +1
     else:

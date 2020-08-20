@@ -15,7 +15,7 @@ def luberize(tracks):
     u = unq.unq((newtracks[:,ndat]),[])
     ntracks = len(u)
     u = np.hstack([-1,u])
-    for i in xrange(0,ntracks):
+    for i in range(0,ntracks):
         newtracks[u[i]+1:u[i+1]+1,ndat] = i+1
     
     return newtracks
