@@ -167,15 +167,15 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 
                 # make a hash table which will allow us to know which new particles
                 # are at a given si.
-                strt = np.zeros(np.int(nblocks))-1
-                fnsh = np.zeros(np.int(nblocks))
+                strt = np.zeros(int(nblocks))-1
+                fnsh = np.zeros(int(nblocks))
                 
                 for j in range(1,m+1):
-                    if strt[np.int(si[isort[j-1]])] == -1: # ks how could it be anything else?
-                        strt[np.int(si[isort[j-1]])] = j
-                        fnsh[np.int(si[isort[j-1]])] = j
+                    if strt[int(si[isort[j-1]])] == -1: # ks how could it be anything else?
+                        strt[int(si[isort[j-1]])] = j
+                        fnsh[int(si[isort[j-1]])] = j
                     else:
-                        fnsh[np.int(si[isort[j-1]])] = j
+                        fnsh[int(si[isort[j-1]])] = j
                 # loops over the old particles, and find those new particles in the 'cube'.
                 coltot = np.zeros(m)
                 rowtot = np.zeros(n)
@@ -189,7 +189,7 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                     if ngood !=0:
                         s = s[w]
                         for k in range(0,ngood):
-                            map1 = np.hstack([map1,isort[np.int(strt[s[k]]-1):np.int(fnsh[s[k]])]])
+                            map1 = np.hstack([map1,isort[int(strt[s[k]]-1):int(fnsh[s[k]])]])
                         map1 = map1[1:len(map1)]
                         
                         # find those trivial bonds
@@ -208,13 +208,13 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 w = (rowtot==1).nonzero()[0]
                 ngood = len(w)
                 if ngood != 0: # ks not tested
-                    ww = (coltot[which1[w].astype(np.int)]==1).nonzero()[0]
+                    ww = (coltot[which1[w].astype(int)]==1).nonzero()[0]
                     ngood = len(w)
                     if ngood != 0:
-                        resx[ispan,w[ww]] = eyes[which1[w[ww]].astype(np.int)]
-                        found[which1[w[ww]].astype(np.int)] = 1
+                        resx[ispan,w[ww]] = eyes[which1[w[ww]].astype(int)]
+                        found[which1[w[ww]].astype(int)] = 1
                         rowtot[w[ww]] = 0
-                        coltot[which1[w[ww]].astype(np.int)] = 0
+                        coltot[which1[w[ww]].astype(int)] = 0
                 
                 labely = (rowtot>0).nonzero()[0]
                 ngood=len(labely)

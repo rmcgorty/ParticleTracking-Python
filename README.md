@@ -1,7 +1,7 @@
 # ParticleTracking-Python
 Python particle tracking code
 
-This is particle tracking code slightly edited from a version downloaded from here: http://people.umass.edu/kilfoil/downloads.html
+This is particle tracking code slightly edited from a version downloaded from here: https://projects.upei.ca/kilfoillab/?page_id=35
 
 That code was written in Python by Kevin Smith and Maria Kilfoil and was based on IDL code by John Crocker. 
 
