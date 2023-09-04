@@ -120,8 +120,8 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
                 # (which consists of the d-dimensional raster scan of the volume.)
                 abi = np.floor(xyi/blocksize)
                 abpos = np.floor(pos/blocksize)
-                print("abi size:", abi.shape)
-                print("abpos size:", abpos.shape)
+                #print("abi size:", abi.shape)
+                #print("abpos size:", abpos.shape)
                 si = np.ones((1,m))[0]
                 spos = np.zeros((1,n))[0]
                 dimm = np.zeros((1,dim))[0]
