@@ -642,14 +642,16 @@ def trackmem(xyzs,maxdisp,dim,goodenough,memory):
     resx = 0
     
     # need to make up a result array!
-    if olist != []:
+    #if olist != []:
+    if olist.size != 0:
         nolist = len(olist[:,0])
     else:
         nolist = 0
     res = np.zeros((nolist,dd+2))
     
     olist = olist.astype(int)
-    if olist != []:
+    #if olist != []:
+    if olist.size != 0:
         for j in range(0,dd+1):
             res[:,j] = xyzs[olist[:,0],j]
             res[:,dd+1] = olist[:,1] +1
