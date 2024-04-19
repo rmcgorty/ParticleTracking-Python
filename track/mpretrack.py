@@ -7,6 +7,9 @@ import numpy as np
 import numbers
 import matplotlib.pyplot as plt
 
+#addded 4/18/2024 by RJM. Using skimage.io to open tiff
+from skimage import io
+
 #Had fovn as 3rd argument but got rid of that 4/5/16 RJM
 def run(basepath, fname, numframes, featuresize, masscut=0, Imin=0, barI=None, 
         barCc=None, barRg=None, IdivRg=None, field=2,
@@ -77,7 +80,7 @@ def run(basepath, fname, numframes, featuresize, masscut=0, Imin=0, barI=None,
     else:
         times = np.arange(0,numframes) #added this if statement RJM 4/5/16
     strnam = os.path.join(basepath, fname)
-    img_timeseries = tiff_file.imread(strnam)
+    img_timeseries = io.imread(strnam)
     for x in range(0,numframes): #was xrange(1,numframes) -- changed 1 to 0 on 4/5/16 RJM
         img=img_timeseries[x,:,:]
        
