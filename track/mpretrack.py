@@ -213,7 +213,7 @@ def test(basepath, fname, frame, featuresize, masscut=0, Imin=0, barI=None,
     strnam = os.path.join(basepath, fname)
     #img = Image.open(strnam)
     #img = np.asarray(img)
-    img_timeseries = tiff_file.imread(strnam)
+    img_timeseries = io.imread(strnam)
     if len(img_timeseries.shape)==3:
         img=img_timeseries[frame,:,:]
     else:
