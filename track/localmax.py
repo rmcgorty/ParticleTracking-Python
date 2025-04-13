@@ -85,7 +85,7 @@ def localmax(image,sep,field,intmin):
     for i in range(0,ngood):
          b = c[int(y0[i]):int(y1[i]+1),int(x0[i]):int(x1[i]+1)]
          b = b*mask # look only in circular region
-         Y = np.msort(b)
+         Y = np.sort(b,axis=0)
          I = b.argsort(axis=0)
          g1 = I[-1,:] # array that contains which row was the biggest value for each column
          yi = np.max(Y[-1,:]) # yi is the abs maximum within the mask
